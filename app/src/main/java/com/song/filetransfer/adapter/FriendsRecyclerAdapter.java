@@ -1,4 +1,4 @@
-package com.song.filetransfer.Adapter;
+package com.song.filetransfer.adapter;
 
 
 public class FriendsRecyclerAdapter {
