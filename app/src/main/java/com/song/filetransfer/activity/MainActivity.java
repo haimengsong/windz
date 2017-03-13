@@ -1,48 +1,56 @@
 package com.song.filetransfer.activity;
 
+import android.app.ActivityManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Message;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.song.filetransfer.R;
 import com.song.filetransfer.base.BaseWebActivity;
 import com.song.filetransfer.service.WebService;
+import com.song.filetransfer.view.RadarView;
 
 public class MainActivity extends BaseWebActivity {
-    public static final String TAG = "MainActivity";
-    private TextView mTextView;
-    private Button mButton1;
-    private Button mButton2;
+    public final String TAG = getClass().getName();
+
+    private TextView mTVUserName;
+    private TextView mTVUserIP;
+
+    private RadarView mRadarView;
+
+    private ImageButton mIBSetting;
+    private ImageButton mIBRecord;
+    private ImageButton mIBSearch;
+    private ImageButton mIBFriend;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
-        mTextView = (TextView) findViewById(R.id.text);
-        mButton1 =(Button) findViewById(R.id.button1);
-        mButton1.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent("ACCEPT");
-                WebService mService = getService();
-                if(mService!=null) mService.processMessages(intent);
-            }
-        });
-        mButton2 =(Button) findViewById(R.id.button2);
-        mButton2.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,FileChooserActivity.class);
-                startActivity(intent);
-            }
-        });
+        findViews();
+
+    }
+    private void findViews(){
+        mTVUserName = (TextView) findViewById(R.id.tv_user_name);
+        mTVUserIP = (TextView) findViewById(R.id.tv_user_ip);
+        mRadarView = (RadarView) findViewById(R.id.radar_view);
+        mIBSetting = (ImageButton) findViewById(R.id.ib_setting);
+        mIBRecord = (ImageButton) findViewById(R.id.ib_record);
+        mIBSearch = (ImageButton) findViewById(R.id.ib_search);
+        mIBFriend = (ImageButton) findViewById(R.id.ib_friends);
     }
 
     @Override
@@ -57,8 +65,6 @@ public class MainActivity extends BaseWebActivity {
         String  action = intent.getAction();
         switch (action){
             case "com.song.transfer.ACTION_DISPLAY_USER_IN":
-                mTextView.setText(intent.getExtras().getString("VALUE"));
-                mTextView.append(getBaseContext().getClass().getName().toString());
                 break;
         }
     }

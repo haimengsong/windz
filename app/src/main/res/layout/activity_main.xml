@@ -1,28 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:orientation="vertical"
-    tools:context="com.song.filetransfer.activity.MainActivity">
-    <Button
-        android:id="@+id/button1"
+    android:background="@drawable/main_bg"
+   >
+
+    <ImageButton
+        android:id="@+id/ib_setting"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Click"/>
-    <TextView
-        android:id="@+id/text"
+        android:background="@drawable/gears"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="15dp" />
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
+        android:visibility="gone"
+        android:orientation="vertical"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="15dp">
+
+        <TextView
+            android:id="@+id/tv_user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/colorWhite" />
+
+        <TextView
+            android:id="@+id/tv_user_ip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/colorWhite"
+            android:layout_marginTop="5dp" />
+    </LinearLayout>
+
+    <com.song.filetransfer.view.RadarView
+        android:id="@+id/radar_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        custom:isSearching="true"
+        custom:accelerate="2"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Click"/>
-</LinearLayout>
+        android:layout_gravity="bottom"
+        android:padding="10dp">
+
+        <ImageButton
+            android:id="@+id/ib_record"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_gravity="left"
+            android:elevation="2dp"
+            android:background="@drawable/main_button_record" />
+
+        <ImageButton
+            android:id="@+id/ib_search"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_centerHorizontal="true"
+            android:elevation="2dp"
+            android:background="@drawable/main_button_search" />
+
+        <ImageButton
+            android:id="@+id/ib_friends"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_alignParentRight="true"
+            android:elevation="2dp"
+            android:background="@drawable/main_button_list" />
+    </RelativeLayout>
+</FrameLayout>

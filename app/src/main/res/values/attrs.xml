@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <declare-styleable name="RadarView">
+        <attr name="isSearching" format="boolean" />
+        <attr name="accelerate"  format="float" />
+    </declare-styleable>
+</resources>
