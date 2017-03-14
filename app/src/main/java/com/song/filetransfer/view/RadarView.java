@@ -95,4 +95,13 @@ public class RadarView extends View {
             invalidate();
         }
     }
+
+    public boolean isSearch(){
+        return isSearching;
+    }
+    public void setIsSearching(boolean isSearch){
+        isSearching = isSearch;
+        invalidate();
+    }
+
 }

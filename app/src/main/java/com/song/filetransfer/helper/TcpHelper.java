@@ -1,8 +1,21 @@
 package com.song.filetransfer.helper;
 
-/**
- * Created by song on 3/2/17.
- */
+
+import android.app.Service;
 
 public class TcpHelper {
+
+    private Service service;
+    public TcpHelper(Service service){
+        this.service = service;
+    }
+
+    public void start(){
+
+    }
+
+    public void stop(){
+
+    }
+
 }

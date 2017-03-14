@@ -11,16 +11,19 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.song.filetransfer.application.MyApplication;
 import com.song.filetransfer.service.WebService;
 
 public abstract class BaseActivity extends AppCompatActivity{
 
     private static final String TAG = "BaseActivity";
     private MyBroadcastReceiver mReceiver;
+    private MyApplication mApplication;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         doRegisterReceiver();
+        mApplication = (MyApplication) getApplicationContext();
     }
 
     @Override
@@ -31,6 +34,9 @@ public abstract class BaseActivity extends AppCompatActivity{
         }
     }
 
+    protected MyApplication getMyApplication(){
+        return mApplication;
+    }
     //register broadcast receiver
     private void doRegisterReceiver(){
         mReceiver = new MyBroadcastReceiver();

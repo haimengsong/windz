@@ -21,7 +21,7 @@ import com.song.filetransfer.base.BaseWebActivity;
 import com.song.filetransfer.service.WebService;
 import com.song.filetransfer.view.RadarView;
 
-public class MainActivity extends BaseWebActivity {
+public class MainActivity extends BaseWebActivity implements View.OnClickListener {
     public final String TAG = getClass().getName();
 
     private TextView mTVUserName;
@@ -41,7 +41,7 @@ public class MainActivity extends BaseWebActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
         findViews();
-
+        setListeners();
     }
     private void findViews(){
         mTVUserName = (TextView) findViewById(R.id.tv_user_name);
@@ -53,6 +53,11 @@ public class MainActivity extends BaseWebActivity {
         mIBFriend = (ImageButton) findViewById(R.id.ib_friends);
     }
 
+    private void setListeners(){
+        mIBRecord.setOnClickListener(this);
+        mIBSearch.setOnClickListener(this);
+        mIBFriend.setOnClickListener(this);
+    }
     @Override
     protected void addFiltersToIntentFilter(IntentFilter mIntentFilter) {
         mIntentFilter.addAction("com.song.transfer.ACTION_DISPLAY_USER_IN");
@@ -70,4 +75,22 @@ public class MainActivity extends BaseWebActivity {
     }
 
 
+    @Override
+    public void onClick(View v) {
+        int viewId = v.getId();
+        switch (viewId){
+            case R.id.ib_record:
+                break;
+            case R.id.ib_search:
+                boolean isSearching = mRadarView.isSearch();
+                mRadarView.setIsSearching(!isSearching);
+                if(isSearching) getService().perform(WebService.OFFLINE,null);
+                else getService().perform(WebService.ONLINE,null);
+                break;
+            case R.id.ib_friends:
+                Intent intent = new Intent(this,FriendsActivity.class);
+                startActivity(intent);
+                break;
+        }
+    }
 }

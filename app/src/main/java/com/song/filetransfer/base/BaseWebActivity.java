@@ -14,6 +14,8 @@ import com.song.filetransfer.service.WebService;
 public abstract class BaseWebActivity extends BaseActivity{
     private WebServiceConnection webServiceConnection;
     private WebService mService;
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

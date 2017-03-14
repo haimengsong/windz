@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -20,17 +21,15 @@ public class FriendsActivity extends BaseWebActivity{
     private Button mButton1;
     private Button mButton2;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_friends);
         mTextView = (TextView) findViewById(R.id.text);
         mButton1 =(Button) findViewById(R.id.bt_friends_send);
         mButton1.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent("ACCEPT");
-                WebService mService = getService();
-                if(mService!=null) mService.processMessages(intent);
+
             }
         });
         mButton2 =(Button) findViewById(R.id.bt_friends_choose_file);
