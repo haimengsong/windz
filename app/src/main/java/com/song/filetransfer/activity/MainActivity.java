@@ -14,11 +14,15 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.song.filetransfer.R;
 import com.song.filetransfer.base.BaseWebActivity;
+import com.song.filetransfer.model.Constants;
 import com.song.filetransfer.service.WebService;
+import com.song.filetransfer.utilities.NetUtil;
 import com.song.filetransfer.view.RadarView;
 
 public class MainActivity extends BaseWebActivity implements View.OnClickListener {
@@ -26,6 +30,8 @@ public class MainActivity extends BaseWebActivity implements View.OnClickListene
 
     private TextView mTVUserName;
     private TextView mTVUserIP;
+
+    private LinearLayout mLinearLayout;
 
     private RadarView mRadarView;
 
@@ -44,6 +50,7 @@ public class MainActivity extends BaseWebActivity implements View.OnClickListene
         setListeners();
     }
     private void findViews(){
+        mLinearLayout = (LinearLayout) findViewById(R.id.layout_user_info);
         mTVUserName = (TextView) findViewById(R.id.tv_user_name);
         mTVUserIP = (TextView) findViewById(R.id.tv_user_ip);
         mRadarView = (RadarView) findViewById(R.id.radar_view);
@@ -60,7 +67,10 @@ public class MainActivity extends BaseWebActivity implements View.OnClickListene
     }
     @Override
     protected void addFiltersToIntentFilter(IntentFilter mIntentFilter) {
-        mIntentFilter.addAction("com.song.transfer.ACTION_DISPLAY_USER_IN");
+        mIntentFilter.addAction(Constants.ACTION_DISPLAY_USER_IN);
+        mIntentFilter.addAction(Constants.ACTION_DISPLAY_USER_OFF);
+        mIntentFilter.addAction(Constants.ACTION_DISPLAY_USER_FRIEND_REQUEST);
+        mIntentFilter.addAction(Constants.ACTION_DISPLAY_USER_FILE_REQUEST);
     }
 
     @Override
@@ -69,9 +79,38 @@ public class MainActivity extends BaseWebActivity implements View.OnClickListene
 
         String  action = intent.getAction();
         switch (action){
-            case "com.song.transfer.ACTION_DISPLAY_USER_IN":
+            case Constants.ACTION_DISPLAY_USER_IN:
+                displayUserIn(intent);
+                break;
+            case Constants.ACTION_DISPLAY_USER_OFF:
+                displayUserOff(intent);
+                break;
+            case Constants.ACTION_DISPLAY_USER_FRIEND_REQUEST:
+                displayUserFriendRequest(intent);
+                break;
+            case Constants.ACTION_DISPLAY_USER_FILE_REQUEST:
+                displayUserFileRequest(intent);
                 break;
         }
+    }
+
+    private void displayUserFileRequest(Intent intent) {
+        Bundle bundle = intent.getExtras();
+    }
+
+    private void displayUserFriendRequest(Intent intent) {
+        Bundle bundle = intent.getExtras();
+    }
+
+    private void displayUserOff(Intent intent) {
+        Bundle bundle = intent.getExtras();
+    }
+
+    private void displayUserIn(Intent intent) {
+        Bundle bundle = intent.getExtras();
+        String name = bundle.getString("name");
+        String ip = bundle.getString("ip");
+
     }
 
 
@@ -83,14 +122,38 @@ public class MainActivity extends BaseWebActivity implements View.OnClickListene
                 break;
             case R.id.ib_search:
                 boolean isSearching = mRadarView.isSearch();
-                mRadarView.setIsSearching(!isSearching);
-                if(isSearching) getService().perform(WebService.OFFLINE,null);
-                else getService().perform(WebService.ONLINE,null);
+                if(isSearching) {
+                    getService().handleMsgFromClients(WebService.OFFLINE,null);
+                    mRadarView.setIsSearching(!isSearching);
+                    HideUserInfo();
+                }else{
+                    if(NetUtil.isWifiConnect(this)) {
+                        String ip = NetUtil.getIPAddr(this);
+                        Log.i(TAG,"current ip address: "+ ip);
+                        getMyApplication().getUserModel().setIP(ip);
+                        displayUserInfo(getMyApplication().getUserModel().getName(),ip);
+                        mRadarView.setIsSearching(!isSearching);
+                        getService().handleMsgFromClients(WebService.ONLINE,null);
+                    }
+                    else Toast.makeText(this,R.string.wifi_not_work,Toast.LENGTH_SHORT);
+                }
                 break;
             case R.id.ib_friends:
                 Intent intent = new Intent(this,FriendsActivity.class);
                 startActivity(intent);
                 break;
         }
+    }
+
+    private void HideUserInfo() {
+        mIBSetting.setVisibility(View.VISIBLE);
+        mLinearLayout.setVisibility(View.GONE);
+    }
+
+    private void displayUserInfo(String name, String ip) {
+        mIBSetting.setVisibility(View.GONE);
+        mTVUserName.setText(name);
+        mTVUserIP.setText(ip);
+        mLinearLayout.setVisibility(View.VISIBLE);
     }
 }

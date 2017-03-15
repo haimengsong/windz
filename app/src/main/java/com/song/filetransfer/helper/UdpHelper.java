@@ -2,10 +2,13 @@ package com.song.filetransfer.helper;
 
 
 import android.app.Service;
+import android.content.Intent;
 import android.nfc.Tag;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.song.filetransfer.model.Constants;
 import com.song.filetransfer.service.WebService;
 import com.song.filetransfer.utilities.NetUtil;
 
@@ -32,7 +35,8 @@ public class UdpHelper {
     private final static int RECEIVEPORT = 5001;
     private final static int BUFFERLENGTH = 1024;
     private final static String BROADCASTADDRESS = "255.255.255.255";
-    private Service service;
+
+    private WebService service;
 
     private DatagramSocket udpSendSocket;
     private DatagramSocket udpReceiveSocket;
@@ -44,7 +48,8 @@ public class UdpHelper {
     private ExecutorService threadPool;
 
     private Object mon;
-    public UdpHelper(Service service){
+
+    public UdpHelper(WebService service){
         this.service = service;
         this.mRunnableFactory = new MyRunnableFactory();
         ThreadFactory threadFactory = new CustomThreadFactoryBuilder()
@@ -122,6 +127,8 @@ public class UdpHelper {
                 JSONObject jsonObject = new JSONObject();
                 try {
                     jsonObject.put("info",WebService.ONLINE);
+                    jsonObject.put("mac",service.getGlobal().getUserModel().getMac());
+                    jsonObject.put("name",service.getGlobal().getUserModel().getName());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -148,7 +155,7 @@ public class UdpHelper {
                         try{
                             msgStr = new String(receiveBuffer,0,udpReceivePacket.getLength(),"UTF-8");
                             Log.i(TAG,"receive message: "+msgStr+" from "+udpReceivePacket.getAddress().getHostAddress());
-                            processUdpDataFromPeers(msgStr);
+                            service.handleMsgFromUDP(udpReceivePacket.getAddress().getHostAddress(),msgStr);
                         }catch(UnsupportedEncodingException e){
                             e.printStackTrace();
                         }
@@ -216,21 +223,6 @@ public class UdpHelper {
         }
     }
 
-    private void processUdpDataFromPeers(String msgStr) {
-        try {
-            JSONObject jsonObject = new JSONObject(msgStr);
-            int info = jsonObject.getInt("info");
-            switch (info){
-                case WebService.ONLINE:
-                    break;
-                case WebService.OFFLINE:
-                    break;
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-    }
 
 
      private class CustomThreadFactoryBuilder{

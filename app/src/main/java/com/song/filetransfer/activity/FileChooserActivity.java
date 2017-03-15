@@ -44,7 +44,7 @@ public class FileChooserActivity extends BaseActivity implements AdapterView.OnI
     private final static int MY_PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE = 0;
     private String rootDirPath;
     private ListView mListView;
-    SimpleAdapter listAdapter;
+    private SimpleAdapter listAdapter;
     private List<Map<String, Object>> fileListData;
 
     @Override
@@ -188,7 +188,7 @@ public class FileChooserActivity extends BaseActivity implements AdapterView.OnI
             String mPath = (String) fileListData.get(position).get("path");
             File file = new File(mPath);
             if(!file.isDirectory()){
-                showDialog(file.getName());
+                showDialog(mPath);
                 return;
             }
             Log.d(TAG,"Get into directory "+mPath);

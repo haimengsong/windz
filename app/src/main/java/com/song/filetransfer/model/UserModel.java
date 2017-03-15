@@ -3,26 +3,42 @@ package com.song.filetransfer.model;
 
 import com.song.filetransfer.base.BaseUser;
 
-public class UserModel {
+import java.util.HashMap;
+import java.util.Map;
 
-    private String name;
-    private String ip;
+public class UserModel extends BaseUser{
+
+    private Map<String,RecordModel> mRecordList;
+    private Map<String,FriendModel> mFriendList;
+
     public UserModel(){
-
+        this(null,null,null);
     }
     public UserModel(String name){
-        this.name = name;
+        this(name,null,null);
     }
-    public String getName(){
-        return name;
+    public UserModel(String name,String mac){
+        this(name,mac,null);
     }
-    public void setName(String name){
-        this.name = name;
+    public UserModel(String name,String mac, String ip ){
+        super(name,mac,ip);
+        mRecordList = new HashMap<>();
+        mFriendList = new HashMap<>();
     }
-    public String getIP(){
-        return ip;
+
+    public void addFriend(FriendModel friendModel){
+        mFriendList.put(friendModel.getMac(),friendModel);
     }
-    public void setIP(String ip){
-        this.ip = ip;
+
+    public void removeFriend(FriendModel friendModel){
+        mFriendList.remove(friendModel.getMac());
+    }
+
+    public void addRecord(RecordModel recordModel){
+        mRecordList.put(recordModel.getFilePath(),recordModel);
+    }
+
+    public void removeRecord(RecordModel recordModel){
+        mRecordList.remove(recordModel.getFilePath());
     }
 }

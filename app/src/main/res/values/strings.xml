@@ -4,4 +4,5 @@
     <string name="yes">yes</string>
     <string name="cancel">cancel</string>
     <string name="user_name">Tom</string>
+    <string name="wifi_not_work">Wifi is not working</string>
 </resources>
