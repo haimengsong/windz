@@ -16,6 +16,7 @@ import com.song.filetransfer.application.MyApplication;
 import com.song.filetransfer.helper.TcpHelper;
 import com.song.filetransfer.helper.UdpHelper;
 import com.song.filetransfer.model.Constants;
+import com.song.filetransfer.model.PeerModel;
 import com.song.filetransfer.model.UserModel;
 import com.song.filetransfer.utilities.NetUtil;
 
@@ -38,15 +39,15 @@ public class WebService extends Service {
 
     public final static int REJECTCONNECTION = 0x00000003;
 
+    public final static int SENDFILE = 0x00000004;
+
+
     private TcpHelper tcphelper;
 
     private UdpHelper udpHelper;
 
     private MyApplication myApplication;
 
-    private Map<String, UserModel> onlineUserList;
-
-    private Map<String, UserModel> connectedUserList;
 
     @Nullable
     @Override
@@ -60,24 +61,28 @@ public class WebService extends Service {
         myApplication = (MyApplication) getApplicationContext();
         udpHelper = new UdpHelper(this);
         tcphelper = new TcpHelper(this);
-        onlineUserList = new HashMap<>();
-        connectedUserList = new HashMap<>();
     }
 
     public MyApplication getGlobal(){
         return myApplication;
     }
 
-    public void handleMsgFromClients(int what, Object obj){
+    public void handleMsgFromClients(int what, Bundle bundle){
         switch (what){
             case ONLINE:
                 Log.i(TAG,"ask udpHelper to broadcast online message in LAN");
                 udpHelper.broadcastOnline();
+                tcphelper.startServer();
                 break;
             case OFFLINE:
                 Log.i(TAG,"ask udpHelper to broadcast offline message in LAN");
                 udpHelper.broadcastOffline();
-                onlineUserList.clear();
+                break;
+            case SENDFILE:
+                String ip = bundle.getString("ip");
+                String filePath = bundle.getString("filePath");
+                Log.i(TAG,"ask tcpHelper to send file");
+                tcphelper.sendFile(ip,filePath);
                 break;
         }
 
@@ -93,9 +98,12 @@ public class WebService extends Service {
                 case ONLINE:
                     String name = jsonObject.getString("name");
                     String mac = jsonObject.getString("mac");
-                    if(!onlineUserList.containsKey(ip)) onlineUserList.put(ip,new UserModel(name,mac,ip));
-                    ///// just for testing
-                    if(!connectedUserList.containsKey(ip)) connectedUserList.put(ip,new UserModel(name,mac,ip));
+
+                    /////just for testing
+                    PeerModel peerModel = new PeerModel(name,mac,ip);
+                    peerModel.setIdentity(PeerModel.FRIEND);
+                    myApplication.getUserModel().addPeer(peerModel);
+
                     /////
                     intent = new Intent(Constants.ACTION_DISPLAY_USER_IN);
                     bundle = new Bundle();
@@ -106,7 +114,6 @@ public class WebService extends Service {
                     sendBroadcast(intent);
                     break;
                 case OFFLINE:
-                    if(onlineUserList.containsKey(ip)) onlineUserList.remove(ip);
                     intent = new Intent(Constants.ACTION_DISPLAY_USER_OFF);
                     bundle = new Bundle();
                     bundle.putString("ip",ip);
@@ -134,5 +141,11 @@ public class WebService extends Service {
         public WebService getService(){
             return WebService.this;
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        tcphelper.stopServer();
     }
 }

@@ -6,27 +6,40 @@ import com.song.filetransfer.base.BaseUser;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FriendModel extends BaseUser{
+public class PeerModel extends BaseUser{
+
+    public final static int NORMAL = 0x0001;
+
+    public final static int FRIEND = 0x0002;
 
     private Map<String,FileModel> mFileList;
-    private boolean mIsConnected;
 
-    public FriendModel(){
+    private int identity = NORMAL;
+
+    private boolean mIsConnected = false;
+
+    public PeerModel(){
         this(null,null,null);
     }
 
-    public FriendModel(String name){
+    public PeerModel(String name){
         this(name,null,null);
     }
 
-    public FriendModel(String name,String mac){
+    public PeerModel(String name,String mac){
         this(name,mac,null);
     }
 
-    public FriendModel(String name,String mac, String ip ){
+    public PeerModel(String name,String mac, String ip ){
         super(name,mac,ip);
         mFileList = new HashMap<>();
-        mIsConnected = true;
+    }
+    public int getIdentity() {
+        return identity;
+    }
+
+    public void setIdentity(int identity) {
+        this.identity = identity;
     }
 
     public boolean isConnected(){return mIsConnected;}

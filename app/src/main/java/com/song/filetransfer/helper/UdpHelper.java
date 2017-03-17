@@ -57,8 +57,6 @@ public class UdpHelper {
                 .setDaemon(false)
                 .setPriority(Thread.MAX_PRIORITY).build();
         threadPool = Executors.newCachedThreadPool(threadFactory);
-
-
     }
 
     public void broadcastOnline() {

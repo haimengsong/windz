@@ -9,7 +9,7 @@ import java.util.Map;
 public class UserModel extends BaseUser{
 
     private Map<String,RecordModel> mRecordList;
-    private Map<String,FriendModel> mFriendList;
+    private Map<String,PeerModel> mPeerList;
 
     public UserModel(){
         this(null,null,null);
@@ -23,15 +23,15 @@ public class UserModel extends BaseUser{
     public UserModel(String name,String mac, String ip ){
         super(name,mac,ip);
         mRecordList = new HashMap<>();
-        mFriendList = new HashMap<>();
+        mPeerList = new HashMap<>();
     }
 
-    public void addFriend(FriendModel friendModel){
-        mFriendList.put(friendModel.getMac(),friendModel);
+    public void addPeer(PeerModel peerModel){
+        mPeerList.put(peerModel.getMac(),peerModel);
     }
 
-    public void removeFriend(FriendModel friendModel){
-        mFriendList.remove(friendModel.getMac());
+    public void removePeer(PeerModel peerModel){
+        mPeerList.remove(peerModel.getMac());
     }
 
     public void addRecord(RecordModel recordModel){

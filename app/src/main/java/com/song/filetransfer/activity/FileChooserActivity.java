@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.PersistableBundle;
@@ -29,6 +30,8 @@ import android.widget.Toast;
 
 import com.song.filetransfer.R;
 import com.song.filetransfer.base.BaseActivity;
+import com.song.filetransfer.base.BaseWebActivity;
+import com.song.filetransfer.service.WebService;
 import com.song.filetransfer.utilities.FileUtil;
 import com.song.filetransfer.utilities.StorageUtil;
 
@@ -38,7 +41,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FileChooserActivity extends BaseActivity implements AdapterView.OnItemClickListener{
+public class FileChooserActivity extends BaseWebActivity implements AdapterView.OnItemClickListener{
 
     private final String TAG = getClass().getName();
     private final static int MY_PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE = 0;
@@ -198,14 +201,19 @@ public class FileChooserActivity extends BaseActivity implements AdapterView.OnI
         }
     }
 
-    private void showDialog(String fileName) {
+    private void showDialog(final String fileName) {
         new AlertDialog.Builder(this)
                 .setMessage("Send \""+fileName+"\"?")
                 .setTitle(R.string.dialog_confirm)
                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
+                        /////just for testing
+                        Bundle bundle = new Bundle();
+                        bundle.putString("ip","localhost");
+                        bundle.putString("filePath",fileName);
+                        getService().handleMsgFromClients(WebService.SENDFILE,bundle);
+                        /////
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
