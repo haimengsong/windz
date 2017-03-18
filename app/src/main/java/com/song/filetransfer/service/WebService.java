@@ -100,9 +100,11 @@ public class WebService extends Service {
                     String mac = jsonObject.getString("mac");
 
                     /////just for testing
-                    PeerModel peerModel = new PeerModel(name,mac,ip);
-                    peerModel.setIdentity(PeerModel.FRIEND);
-                    myApplication.getUserModel().addPeer(peerModel);
+                    for(int i=0;i<15;i++){
+                        PeerModel peerModel = new PeerModel(name,i+"",ip);
+                        peerModel.setIdentity(PeerModel.FRIEND);
+                        myApplication.getUserModel().addPeer(peerModel);
+                    }
 
                     /////
                     intent = new Intent(Constants.ACTION_DISPLAY_USER_IN);

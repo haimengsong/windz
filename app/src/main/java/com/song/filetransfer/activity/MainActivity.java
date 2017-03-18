@@ -110,7 +110,6 @@ public class MainActivity extends BaseWebActivity implements View.OnClickListene
         Bundle bundle = intent.getExtras();
         String name = bundle.getString("name");
         String ip = bundle.getString("ip");
-
     }
 
 

@@ -3,7 +3,9 @@ package com.song.filetransfer.model;
 
 import com.song.filetransfer.base.BaseUser;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class UserModel extends BaseUser{
@@ -40,5 +42,20 @@ public class UserModel extends BaseUser{
 
     public void removeRecord(RecordModel recordModel){
         mRecordList.remove(recordModel.getFilePath());
+    }
+
+    public boolean isHasFriend(){
+        List<PeerModel> friendList = getFriendList();
+        if(friendList.isEmpty()) return false;
+        return true;
+    }
+    public List<PeerModel> getFriendList(){
+        List<PeerModel> friendList = new ArrayList<>();
+        for(String ip:mPeerList.keySet()){
+            if(mPeerList.get(ip).getIdentity()==PeerModel.FRIEND){
+                friendList.add(mPeerList.get(ip));
+            }
+        }
+        return friendList;
     }
 }

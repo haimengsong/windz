@@ -3,7 +3,9 @@ package com.song.filetransfer.model;
 
 import com.song.filetransfer.base.BaseUser;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class PeerModel extends BaseUser{
@@ -12,7 +14,7 @@ public class PeerModel extends BaseUser{
 
     public final static int FRIEND = 0x0002;
 
-    private Map<String,FileModel> mFileList;
+    private List<FileModel> mFileList;
 
     private int identity = NORMAL;
 
@@ -32,7 +34,7 @@ public class PeerModel extends BaseUser{
 
     public PeerModel(String name,String mac, String ip ){
         super(name,mac,ip);
-        mFileList = new HashMap<>();
+        mFileList = new ArrayList<>();
     }
     public int getIdentity() {
         return identity;
@@ -46,11 +48,18 @@ public class PeerModel extends BaseUser{
 
     public void setIsConnected(boolean mIsConnected){this.mIsConnected = mIsConnected;}
 
-    public void addFile(FileModel fileModel){
-        mFileList.put(fileModel.getFilePath(),fileModel);
+    public int addFile(FileModel fileModel){
+        mFileList.add(fileModel);
+        return mFileList.size()-1;
     }
 
-    public void removeFile(FileModel fileModel){
-        mFileList.remove(fileModel.getFilePath());
+    public FileModel getFileById(int id){
+        return mFileList.get(id);
     }
+
+    public int getFileNumber(){
+        return mFileList.size();
+    }
+
+
 }

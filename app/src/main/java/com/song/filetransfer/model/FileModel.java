@@ -2,6 +2,7 @@ package com.song.filetransfer.model;
 
 
 import java.io.File;
+import java.util.Date;
 
 public class FileModel {
 
@@ -22,6 +23,7 @@ public class FileModel {
     private int totalSize = 0;
     private int curSize = 0;
     private int transDirection = FILE_SEND;
+    private Date date;
 
     public FileModel(){}
     public FileModel(String filePath){this.filePath=filePath;}
@@ -76,4 +78,18 @@ public class FileModel {
     public String getFileName(){
         return new File(filePath).getName();
     }
+
+
+    public int getRate() {
+        return 1000;
+    }
+
+    public void setDate(Date date){
+        this.date = date;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
 }

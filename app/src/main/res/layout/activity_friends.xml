@@ -1,28 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_friend"
-    android:layout_width="match_parent"
+    android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:orientation="vertical"
-    tools:context="com.song.filetransfer.activity.MainActivity">
-    <Button
-        android:id="@+id/bt_friends_send"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Click"/>
+    android:background="@color/colorFriendBackground">
     <TextView
-        android:id="@+id/text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
-    <Button
-        android:id="@+id/bt_friends_choose_file"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Click"/>
+        android:id="@+id/tv_no_friend"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/no_friend_indicator"
+        android:gravity="center"
+        android:textSize="30sp"/>
+    <ExpandableListView
+        android:id="@+id/elv_friend_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:cacheColorHint="@android:color/transparent"
+        android:scrollbars="none"
+        android:divider="@color/colorDivider"
+        android:childDivider="@color/colorDivider"
+        android:dividerHeight="1dp"
+        >
+    </ExpandableListView>
 </LinearLayout>

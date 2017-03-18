@@ -49,4 +49,14 @@ public class BaseUser {
     public void setLocation(String location){this.location = location;}
 
     public String getLocation(){return location;}
+
+    public int getDistance() {
+        return 0;
+    }
+
+    public String getDistanceByString(){
+        int res = getDistance();
+        if(res/1000==0) return res+" m";
+        return res + " km";
+    }
 }

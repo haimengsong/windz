@@ -80,6 +80,17 @@ public class FileUtil {
         else if (isZip(extension)) return ZIPDATATYPE;
         else return OTHERDATATYPE;
     }
+
+
+    public static String getAppropriateSize(int size){
+        int level = 0;
+        while((size/1024)!=0){
+            size /= 1024;
+            level++;
+        }
+        return size +((level==0)?" B":((level==1)?" KB": ((level==2)?" MB":"GB")));
+    }
+
     public static boolean isImage(String type) {
         if (type != null
                 && (type.equals("jpg") || type.equals("gif")

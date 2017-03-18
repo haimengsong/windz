@@ -27,6 +27,7 @@ public class TcpHelper {
 
     public final static int ServerPort = 5005;
 
+    public final static String CHARSET = "UTF-8";
     private Service service;
 
     private ServerSocket serverSocket;
@@ -52,26 +53,45 @@ public class TcpHelper {
                                 new Thread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        /*
+                                        BufferedReader br = null;
+                                        String fileName = "";
+                                        String fileSize = "";
                                         try{
-                                            BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
+
+                                            br = new BufferedReader(new InputStreamReader(s.getInputStream(),CHARSET));
                                             String line = null;
-                                            while((line = in.readLine())!=null){
-                                                Log.i(TAG,"get message: "+line+" from "+s.getInetAddress().getHostAddress());
+                                            int count = 0;
+                                            while(count<2){
+                                                line = br.readLine();
+                                                switch (count) {
+                                                    case 0:
+                                                        fileName = line;
+                                                        Log.i(TAG, "file's name: " + line);
+                                                        break;
+                                                    case 1:
+                                                        fileSize = line;
+                                                        Log.i(TAG, "file's size: " + line + "bytes");
+                                                        break;
+                                                }
+                                                count++;
                                             }
+
                                         }catch (IOException e){
                                             e.printStackTrace();
                                         }
-                                        */
 
-                                        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),"Hello.txt");
+
+                                        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),fileName);
                                         Log.i(TAG,"start saving file to : "+ file.getAbsolutePath());
+                                        BufferedOutputStream bos = null;
+                                        BufferedInputStream bis = null;
                                         try {
 
-                                            BufferedOutputStream bos= new BufferedOutputStream(new FileOutputStream(file));
-                                            BufferedInputStream bis = new BufferedInputStream(s.getInputStream());
+                                            bos= new BufferedOutputStream(new FileOutputStream(file));
+                                            bis = new BufferedInputStream(s.getInputStream());
                                             byte [] buffer = new byte[8192];
                                             int count = 0;
+                                            Log.i(TAG,"available: "+bis.available());
                                             while ((count = bis.read(buffer))!=-1){
                                                 Log.i(TAG,count+"");
                                                 bos.write(buffer,0,count);
@@ -82,6 +102,36 @@ public class TcpHelper {
                                             e.printStackTrace();
                                         } catch (IOException e){
                                             e.printStackTrace();
+                                        } finally {
+                                            if(bos!=null) {
+                                                try {
+                                                    bos.close();
+                                                } catch (IOException e){
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                            if(bis!=null) {
+                                                try {
+                                                    bis.close();
+                                                } catch (IOException e){
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                            if(br!=null) {
+                                                try {
+                                                    br.close();
+                                                } catch (IOException e){
+                                                    e.printStackTrace();
+                                                }
+                                            }
+
+                                            if(s!=null) {
+                                                try {
+                                                    s.close();
+                                                } catch (IOException e){
+                                                    e.printStackTrace();
+                                                }
+                                            }
                                         }
 
 
@@ -121,26 +171,37 @@ public class TcpHelper {
                 Socket socket = null;
                 BufferedOutputStream ops = null;
                 BufferedInputStream bis = null;
+                BufferedWriter bw = null;
+                File file = new File(filePath);
                 try{
                     socket = new Socket("192.168.0.7",ServerPort);
-                    ///*
+
+                    bw = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(),CHARSET));
+                    for(int count = 0;count<2;count++){
+                        switch(count){
+                            case 0:
+                                bw.write(file.getName());
+                                bw.newLine();
+                                bw.flush();
+                                break;
+                            case 1:
+                                bw.write(String.valueOf(file.getTotalSpace()));
+                                bw.newLine();
+                                bw.flush();
+                                break;
+
+                        }
+                    }
                     ops = new BufferedOutputStream(socket.getOutputStream());
-                    bis = new BufferedInputStream(new FileInputStream(new File(filePath)));
+                    bis = new BufferedInputStream(new FileInputStream(file));
                     byte [] buffer = new byte[8192];
                     int count=0;
                     while((count = bis.read(buffer))!=-1){
                         ops.write(buffer,0,count);
                         ops.flush();
+                        Log.i(TAG, "write "+count+" bytes to outputstream");
                     }
-                    //*/
-                    /*
-                    BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-
-                        out.write("Hello World");
-                        out.newLine();
-                        out.flush();
-                    */
-                    Log.i(TAG,"client: "+socket.getLocalAddress().getHostAddress()+" on port: "+socket.getLocalPort()+" succeed to send file: "+filePath+" to server: "+socket.getInetAddress().getHostAddress()+" on port:"+ServerPort+" !");
+                    Log.i(TAG,"client: "+socket.getLocalAddress().getHostAddress()+" on port: "+socket.getLocalPort()+" succeed to send file: "+filePath+" to server!");
                 }catch (SocketException e){
                     e.printStackTrace();
                 }catch (IOException e){
@@ -160,7 +221,13 @@ public class TcpHelper {
                             e.printStackTrace();
                         }
                     }
-
+                    if(bw!=null) {
+                        try {
+                            bw.close();
+                        } catch (IOException e){
+                            e.printStackTrace();
+                        }
+                    }
                     if(socket!=null) {
                         try {
                             socket.close();

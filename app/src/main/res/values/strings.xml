@@ -5,4 +5,12 @@
     <string name="cancel">cancel</string>
     <string name="user_name">Tom</string>
     <string name="wifi_not_work">Wifi is not working</string>
+    <string name="no_friend_indicator">No friends</string>
+    <string name="file_sending">sending</string>
+    <string name="file_receiving">receiving</string>
+    <string name="file_fail">fail</string>
+    <string name="file_success">success</string>
+    <string name="file_pause">pause</string>
+    <string name="friend_send">send</string>
+    <string name="unknown_distance">unknown</string>
 </resources>
