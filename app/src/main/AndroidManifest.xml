@@ -15,6 +15,7 @@
         <activity android:name=".activity.MainActivity">
         </activity>
         <activity android:name=".activity.WelcomeActivity"
+            android:theme="@style/AppTheme.NoActionBar.FullScreen"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
