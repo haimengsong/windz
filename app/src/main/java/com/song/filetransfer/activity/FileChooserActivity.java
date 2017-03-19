@@ -2,6 +2,7 @@ package com.song.filetransfer.activity;
 
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -201,19 +202,24 @@ public class FileChooserActivity extends BaseWebActivity implements AdapterView.
         }
     }
 
-    private void showDialog(final String fileName) {
+    private void showDialog(final String filePath) {
         new AlertDialog.Builder(this)
-                .setMessage("Send \""+fileName+"\"?")
+                .setMessage("Send \""+filePath+"\"?")
                 .setTitle(R.string.dialog_confirm)
                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        /////just for testing
-                        Bundle bundle = new Bundle();
-                        bundle.putString("ip","localhost");
-                        bundle.putString("filePath",fileName);
-                        getService().handleMsgFromClients(WebService.SENDFILE,bundle);
-                        /////
+
+                        //return the result to friend activity
+                        Intent returnIntent = getIntent();
+                        Bundle bundle = returnIntent.getExtras();
+                        bundle.putString("filePath",filePath);
+                        returnIntent.putExtras(bundle);
+                        Log.i(TAG,"file path: "+ filePath);
+                        setResult(Activity.RESULT_OK,returnIntent);
+
+                        finish();
+
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -246,4 +252,5 @@ public class FileChooserActivity extends BaseWebActivity implements AdapterView.
             listAdapter.notifyDataSetChanged();
         }
     }
+
 }

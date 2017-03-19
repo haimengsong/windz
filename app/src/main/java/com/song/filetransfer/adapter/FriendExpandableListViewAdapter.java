@@ -7,11 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.song.filetransfer.R;
+import com.song.filetransfer.activity.FriendsActivity;
 import com.song.filetransfer.model.FileModel;
 import com.song.filetransfer.model.PeerModel;
 import com.song.filetransfer.utilities.FileUtil;
@@ -20,10 +22,12 @@ import org.w3c.dom.Text;
 
 import java.util.List;
 
-public class FriendExpandableListViewAdapter extends BaseExpandableListAdapter{
+public class FriendExpandableListViewAdapter extends BaseExpandableListAdapter  {
 
     private List<PeerModel> mFriendList;
     private Context context;
+    private GroupButtonClickListener groupButtonListener;
+
 
     public FriendExpandableListViewAdapter(Context context,List<PeerModel> mFriendList){
         this.context = context;
@@ -47,12 +51,13 @@ public class FriendExpandableListViewAdapter extends BaseExpandableListAdapter{
     }
 
     @Override
-    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+    public View getGroupView(final int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
 
         GroupViewHolder holder = null;
         if(convertView == null){
             holder = new GroupViewHolder();
             convertView = LayoutInflater.from(context).inflate(R.layout.friend_group_layout,parent,false);
+            holder.fileSendButton = (Button) convertView.findViewById(R.id.btn_send);
             holder.friendNameTextView = (TextView) convertView.findViewById(R.id.friend_name);
             holder.friendIPTextView = (TextView) convertView.findViewById(R.id.friend_ip);
             holder.friendDistanceTextView = (TextView) convertView.findViewById(R.id.friend_distance);
@@ -62,7 +67,14 @@ public class FriendExpandableListViewAdapter extends BaseExpandableListAdapter{
         }
 
         PeerModel friendData = (PeerModel) getGroup(groupPosition);
-
+        holder.fileSendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(groupButtonListener!=null){
+                    groupButtonListener.onGroupButtonClick(groupPosition);
+                }
+            }
+        });
         holder.friendNameTextView.setText(friendData.getName());
         holder.friendIPTextView.setText(friendData.getIP());
         holder.friendDistanceTextView.setText(friendData.getDistanceByString());
@@ -145,12 +157,12 @@ public class FriendExpandableListViewAdapter extends BaseExpandableListAdapter{
             childViewHolder.fileRateTextView.setText(fileData.getRate());
             childViewHolder.fileCurrentSizeTextView.setText(FileUtil.getAppropriateSize(fileData.getCurSize()));
             childViewHolder.fileStateTextView.setText(fileData.getTransDirection()==FileModel.FILE_SEND?context.getString(R.string.file_sending):context.getString(R.string.file_receiving));
-            childViewHolder.progressBar.setMax(fileData.getTotalSize());
-            childViewHolder.progressBar.setProgress(fileData.getCurSize());
+            childViewHolder.progressBar.setMax((int)fileData.getTotalSize());
+            childViewHolder.progressBar.setProgress((int)fileData.getCurSize());
         }else{
             childViewHolder.fileNameTextView.setText(fileData.getFileName());
-            childViewHolder.fileDateTextView.setText(fileData.getDate().getTime()+"");
-            childViewHolder.fileTotalSizeTextView.setText(fileData.getTotalSize());
+            childViewHolder.fileDateTextView.setText(fileData.getDate());
+            childViewHolder.fileTotalSizeTextView.setText(FileUtil.getAppropriateSize(fileData.getTotalSize()));
             String state = null;
             switch (fileData.getState()){
                 case FileModel.FILE_SUCCESS:
@@ -179,7 +191,13 @@ public class FriendExpandableListViewAdapter extends BaseExpandableListAdapter{
         return false;
     }
 
+    public void setOnGroupButtonClickListener(GroupButtonClickListener groupButtonClickListener) {
+        this.groupButtonListener = groupButtonClickListener;
+    }
+
+
     private class GroupViewHolder{
+        public Button fileSendButton;
         public TextView friendNameTextView;
         public TextView friendIPTextView;
         public TextView friendDistanceTextView;
@@ -200,5 +218,9 @@ public class FriendExpandableListViewAdapter extends BaseExpandableListAdapter{
     public void setData(List<PeerModel> mFriendList){
         this.mFriendList = mFriendList;
         notifyDataSetChanged();
+    }
+
+    public static interface GroupButtonClickListener {
+        void onGroupButtonClick(int groupPosition);
     }
 }

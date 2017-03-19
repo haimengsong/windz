@@ -82,7 +82,7 @@ public class FileUtil {
     }
 
 
-    public static String getAppropriateSize(int size){
+    public static String getAppropriateSize(long size){
         int level = 0;
         while((size/1024)!=0){
             size /= 1024;

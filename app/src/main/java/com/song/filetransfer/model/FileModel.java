@@ -4,7 +4,7 @@ package com.song.filetransfer.model;
 import java.io.File;
 import java.util.Date;
 
-public class FileModel {
+public class FileModel{
 
     public final static int FILE_START = 0x0001;
     public final static int FILE_TRANSFERING = 0x0002;
@@ -17,24 +17,22 @@ public class FileModel {
     public final static int FILE_RECEIVE = 0x0007;
 
 
+    private File file;
+    private String filePath;
+    private int state;
+    private long totalSize;
+    private long curSize;
+    private int transDirection;
+    private String date;
 
-    private String filePath = "";
-    private int state = FILE_START;
-    private int totalSize = 0;
-    private int curSize = 0;
-    private int transDirection = FILE_SEND;
-    private Date date;
-
-    public FileModel(){}
-    public FileModel(String filePath){this.filePath=filePath;}
-    public FileModel(String filePath, int totalSize){
+    public FileModel(String filePath,int transDirection){
         this.filePath = filePath;
-        this.totalSize = totalSize;
-    }
-    public FileModel(String filePath, int totalSize, int transDirection){
-        this.filePath = filePath;
-        this.totalSize = totalSize;
+        this.file = new File(filePath);
+        this.state = FILE_START;
+        this.totalSize = file.getTotalSpace();
+        this.curSize = 0;
         this.transDirection = transDirection;
+        this.date = android.text.format.DateFormat.format("yyyy-MM-dd kk:mm:ss a", new java.util.Date()).toString();
     }
 
     public int getState() {
@@ -45,19 +43,19 @@ public class FileModel {
         this.state = state;
     }
 
-    public int getTotalSize() {
+    public long getTotalSize() {
         return totalSize;
     }
 
-    public void setTotalSize(int totalSize) {
+    public void setTotalSize(long totalSize) {
         this.totalSize = totalSize;
     }
 
-    public int getCurSize() {
+    public long getCurSize() {
         return curSize;
     }
 
-    public void setCurSize(int curSize) {
+    public void setCurSize(long curSize) {
         this.curSize = curSize;
     }
 
@@ -68,6 +66,7 @@ public class FileModel {
     public void setTransDirection(int transDirection) {
         this.transDirection = transDirection;
     }
+
     public String getFilePath() {
         return filePath;
     }
@@ -75,6 +74,7 @@ public class FileModel {
     public void setFilePath(String filePath) {
         this.filePath = filePath;
     }
+
     public String getFileName(){
         return new File(filePath).getName();
     }
@@ -84,11 +84,7 @@ public class FileModel {
         return 1000;
     }
 
-    public void setDate(Date date){
-        this.date = date;
-    }
-
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 

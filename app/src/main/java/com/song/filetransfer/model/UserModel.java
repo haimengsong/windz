@@ -28,8 +28,12 @@ public class UserModel extends BaseUser{
         mPeerList = new HashMap<>();
     }
 
+    public PeerModel getPeer(String ip){
+        return mPeerList.get(ip);
+    }
+
     public void addPeer(PeerModel peerModel){
-        mPeerList.put(peerModel.getMac(),peerModel);
+        mPeerList.put(peerModel.getIP(),peerModel);
     }
 
     public void removePeer(PeerModel peerModel){

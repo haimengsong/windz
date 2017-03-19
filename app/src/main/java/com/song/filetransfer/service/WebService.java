@@ -16,6 +16,7 @@ import com.song.filetransfer.application.MyApplication;
 import com.song.filetransfer.helper.TcpHelper;
 import com.song.filetransfer.helper.UdpHelper;
 import com.song.filetransfer.model.Constants;
+import com.song.filetransfer.model.FileModel;
 import com.song.filetransfer.model.PeerModel;
 import com.song.filetransfer.model.UserModel;
 import com.song.filetransfer.utilities.NetUtil;
@@ -79,8 +80,11 @@ public class WebService extends Service {
                 udpHelper.broadcastOffline();
                 break;
             case SENDFILE:
-                String ip = bundle.getString("ip");
+                String ip = bundle.getString("userIP");
                 String filePath = bundle.getString("filePath");
+                Log.e(TAG,myApplication.getUserModel().getPeer(ip)+"");
+                myApplication.getUserModel().getPeer(ip).addFile(new FileModel(filePath,FileModel.FILE_SEND));
+                sendBroadCast(new Intent(Constants.ACTION_DISPLAY_FILE_LIST_CHANGE));
                 Log.i(TAG,"ask tcpHelper to send file");
                 tcphelper.sendFile(ip,filePath);
                 break;
@@ -98,15 +102,12 @@ public class WebService extends Service {
                 case ONLINE:
                     String name = jsonObject.getString("name");
                     String mac = jsonObject.getString("mac");
-
-                    /////just for testing
-                    for(int i=0;i<15;i++){
-                        PeerModel peerModel = new PeerModel(name,i+"",ip);
-                        peerModel.setIdentity(PeerModel.FRIEND);
-                        myApplication.getUserModel().addPeer(peerModel);
-                    }
-
-                    /////
+                    ///// just for testing
+                    PeerModel peerModel = new PeerModel(name,mac,ip);
+                    peerModel.setIdentity(PeerModel.FRIEND);
+                    myApplication.getUserModel().addPeer(peerModel);
+                    sendBroadCast(new Intent(Constants.ACTION_DISPLAY_CONNECTION_CHANGE));
+                    ////
                     intent = new Intent(Constants.ACTION_DISPLAY_USER_IN);
                     bundle = new Bundle();
                     bundle.putString("name",name);
@@ -134,7 +135,7 @@ public class WebService extends Service {
         }
 
     }
-    private void sentBroadcast(Intent intent){
+    private void sendBroadCast(Intent intent){
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
