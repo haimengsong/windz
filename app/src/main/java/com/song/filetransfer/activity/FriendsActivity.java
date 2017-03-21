@@ -95,14 +95,15 @@ public class FriendsActivity extends BaseWebActivity implements ExpandableListVi
 
     @Override
     protected void onReceiveIntent(Context context, Intent intent) {
-
-        Log.d(TAG,"received intent");
+        
         String  action = intent.getAction();
         switch (action){
             case Constants.ACTION_DISPLAY_CONNECTION_CHANGE:
+                Log.i(TAG,"receive intent action: ACTION_DISPLAY_CONNECTION_CHANGE");
                 updateScreen(true);
                 break;
             case Constants.ACTION_DISPLAY_FILE_LIST_CHANGE:
+                Log.i(TAG,"receive intent action: ACTION_DISPLAY_FILE_LIST_CHANGE");
                 updateScreen(false);
                 break;
         }

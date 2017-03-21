@@ -11,6 +11,11 @@
     <string name="file_fail">fail</string>
     <string name="file_success">success</string>
     <string name="file_pause">pause</string>
+    <string name="file_cancel">cancelled</string>
+    <string name="file_start">start</string>
+    <string name="file_stop">stop</string>
+    <string name="file_transfer">transfering</string>
     <string name="friend_send">send</string>
     <string name="unknown_distance">unknown</string>
+    <string name="file_verify">verifying</string>
 </resources>

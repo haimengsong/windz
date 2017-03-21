@@ -8,7 +8,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.song.filetransfer.base.BaseUser;
 import com.song.filetransfer.model.Constants;
+import com.song.filetransfer.model.UserModel;
 import com.song.filetransfer.service.WebService;
 import com.song.filetransfer.utilities.NetUtil;
 
@@ -59,7 +61,7 @@ public class UdpHelper {
         threadPool = Executors.newCachedThreadPool(threadFactory);
     }
 
-    public void broadcastOnline() {
+    public void broadcastOnline(UserModel userModel) {
         try {
             udpSendSocket = new DatagramSocket(SENDPORT);
             udpSendSocket.setReuseAddress(true);
@@ -73,7 +75,7 @@ public class UdpHelper {
             udpReceiveSocket = new DatagramSocket(RECEIVEPORT);
             udpReceiveSocket.setReuseAddress(true);
             Log.i(TAG,"udp receive socket is bind to "+udpReceiveSocket.getLocalAddress());
-            onLineThread = new Thread(mRunnableFactory.getRunnable(WebService.ONLINE));
+            onLineThread = new Thread(mRunnableFactory.getRunnable(WebService.ONLINE,userModel));
             onLineThread.start();
         } catch(SocketException e){
             e.printStackTrace();
@@ -84,7 +86,7 @@ public class UdpHelper {
     public void broadcastOffline() {
         Log.i(TAG,"Stop the thread waiting for messages from LAN");
         //if(onLineThread!=null) onLineThread.interrupt();
-        new Thread(mRunnableFactory.getRunnable(WebService.OFFLINE)).start();
+        new Thread(mRunnableFactory.getRunnable(WebService.OFFLINE,null)).start();
         threadPool.shutdown();
     }
 
@@ -120,13 +122,18 @@ public class UdpHelper {
     }
     private class MyRunnableFactory{
         class OnlineRunnable implements Runnable{
+
+            private UserModel userModel;
+            public OnlineRunnable(BaseUser baseUser){
+                this.userModel = (UserModel) baseUser;
+            }
             @Override
             public void run() {
                 JSONObject jsonObject = new JSONObject();
                 try {
                     jsonObject.put("info",WebService.ONLINE);
-                    jsonObject.put("mac",service.getGlobal().getUserModel().getMac());
-                    jsonObject.put("name",service.getGlobal().getUserModel().getName());
+                    jsonObject.put("mac",userModel.getMac());
+                    jsonObject.put("name",userModel.getName());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -168,6 +175,7 @@ public class UdpHelper {
 
         }
         class OfflineRunnable implements Runnable{
+
             @Override
             public void run() {
                 JSONObject jsonObject = new JSONObject();
@@ -208,10 +216,10 @@ public class UdpHelper {
             }
         }
 
-        public Runnable getRunnable(int runnableType){
+        public Runnable getRunnable(int runnableType, BaseUser baseUser){
             switch (runnableType){
                 case WebService.ONLINE:
-                    return new OnlineRunnable();
+                    return new OnlineRunnable(baseUser);
                 case WebService.OFFLINE:
                     return new OfflineRunnable();
                 default:

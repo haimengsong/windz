@@ -31,7 +31,7 @@ import java.util.Map;
 
 public class WebService extends Service {
     public final static String TAG = "WebService";
-
+    // for user and udp helper
     public final static int ONLINE = 0x00000000;
 
     public final static int OFFLINE = 0x00000001;
@@ -42,6 +42,11 @@ public class WebService extends Service {
 
     public final static int SENDFILE = 0x00000004;
 
+    //for tcp helper
+    public final static int RECEIVE_FILE = 0x00000005;
+
+    public final static int FILE_STATE_CHANGE = 0x00000006;
+
 
     private TcpHelper tcphelper;
 
@@ -49,7 +54,9 @@ public class WebService extends Service {
 
     private MyApplication myApplication;
 
+    private UserModel userModel;
 
+    private Object lockObject = new Object();
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -60,19 +67,16 @@ public class WebService extends Service {
     public void onCreate() {
         super.onCreate();
         myApplication = (MyApplication) getApplicationContext();
+        userModel = myApplication.getUserModel();
         udpHelper = new UdpHelper(this);
         tcphelper = new TcpHelper(this);
-    }
-
-    public MyApplication getGlobal(){
-        return myApplication;
     }
 
     public void handleMsgFromClients(int what, Bundle bundle){
         switch (what){
             case ONLINE:
                 Log.i(TAG,"ask udpHelper to broadcast online message in LAN");
-                udpHelper.broadcastOnline();
+                udpHelper.broadcastOnline(userModel);
                 tcphelper.startServer();
                 break;
             case OFFLINE:
@@ -82,11 +86,12 @@ public class WebService extends Service {
             case SENDFILE:
                 String ip = bundle.getString("userIP");
                 String filePath = bundle.getString("filePath");
-                Log.e(TAG,myApplication.getUserModel().getPeer(ip)+"");
-                myApplication.getUserModel().getPeer(ip).addFile(new FileModel(filePath,FileModel.FILE_SEND));
+                Log.e(TAG,userModel.getPeer(ip)+"");
+                FileModel fileModel = new FileModel(filePath,FileModel.FILE_SEND);
+                userModel.getPeer(ip).addFile(fileModel);
                 sendBroadCast(new Intent(Constants.ACTION_DISPLAY_FILE_LIST_CHANGE));
-                Log.i(TAG,"ask tcpHelper to send file");
-                tcphelper.sendFile(ip,filePath);
+                Log.i(TAG,"ask tcpHelper to send file: "+filePath+" to: "+ip);
+                tcphelper.sendFile(ip,fileModel);
                 break;
         }
 
@@ -105,7 +110,7 @@ public class WebService extends Service {
                     ///// just for testing
                     PeerModel peerModel = new PeerModel(name,mac,ip);
                     peerModel.setIdentity(PeerModel.FRIEND);
-                    myApplication.getUserModel().addPeer(peerModel);
+                    userModel.addPeer(peerModel);
                     sendBroadCast(new Intent(Constants.ACTION_DISPLAY_CONNECTION_CHANGE));
                     ////
                     intent = new Intent(Constants.ACTION_DISPLAY_USER_IN);
@@ -135,6 +140,29 @@ public class WebService extends Service {
         }
 
     }
+
+    public void handleMsgFromTCP(int info,String ip,FileModel fileModel){
+
+        Intent intent = null;
+        switch (info){
+            case RECEIVE_FILE:
+                synchronized (lockObject){
+                    userModel.getPeer(ip).addFile(fileModel);
+                }
+                intent = new Intent(Constants.ACTION_DISPLAY_FILE_LIST_CHANGE);
+                sendBroadCast(intent);
+                break;
+            case FILE_STATE_CHANGE:
+                intent = new Intent(Constants.ACTION_DISPLAY_FILE_LIST_CHANGE);
+                sendBroadCast(intent);
+                break;
+        }
+
+    }
+
+
+
+
     private void sendBroadCast(Intent intent){
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }

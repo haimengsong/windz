@@ -217,7 +217,6 @@ public class FileChooserActivity extends BaseWebActivity implements AdapterView.
                         returnIntent.putExtras(bundle);
                         Log.i(TAG,"file path: "+ filePath);
                         setResult(Activity.RESULT_OK,returnIntent);
-
                         finish();
 
                     }

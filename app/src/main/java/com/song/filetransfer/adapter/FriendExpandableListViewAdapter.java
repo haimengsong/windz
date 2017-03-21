@@ -20,6 +20,7 @@ import com.song.filetransfer.utilities.FileUtil;
 
 import org.w3c.dom.Text;
 
+import java.io.File;
 import java.util.List;
 
 public class FriendExpandableListViewAdapter extends BaseExpandableListAdapter  {
@@ -106,12 +107,13 @@ public class FriendExpandableListViewAdapter extends BaseExpandableListAdapter  
     private boolean checkIfRightLayout(View convertView, int state ){
 
         ChildViewHolder holder = (ChildViewHolder)convertView.getTag();
-        if(holder.type==FileModel.FILE_TRANSFERING && state == holder.type) return true;
-        if(holder.type==FileModel.FILE_SUCCESS){
-            if(state == FileModel.FILE_TRANSFERING) return false;
-            return true;
+        boolean checkIfShowProgress = (state == FileModel.FILE_START||state == FileModel.FILE_STOP||state == FileModel.FILE_TRANSFERING);
+        if(holder.type==FileModel.FILE_TRANSFERING) {
+            if(checkIfShowProgress) return true;
+            return false;
         }
-        return false;
+        if(checkIfShowProgress) return false;
+        return true;
     }
 
 
@@ -128,7 +130,7 @@ public class FriendExpandableListViewAdapter extends BaseExpandableListAdapter  
 
         if(convertView == null || !checkIfRightLayout(convertView,fileData.getState())){
             childViewHolder = new ChildViewHolder();
-            if(fileData.getState() == FileModel.FILE_TRANSFERING){
+            if(fileData.getState() == FileModel.FILE_TRANSFERING || fileData.getState() == FileModel.FILE_START || fileData.getState() == FileModel.FILE_STOP){
 
                 convertView = layoutInflater.inflate(R.layout.child_transfering_layout,parent,false);
                 childViewHolder.type = FileModel.FILE_TRANSFERING;
@@ -150,29 +152,47 @@ public class FriendExpandableListViewAdapter extends BaseExpandableListAdapter  
             }
 
         }
-
+        String direction = fileData.getTransDirection()==FileModel.FILE_SEND?context.getString(R.string.file_sending):context.getString(R.string.file_receiving);
         childViewHolder = (ChildViewHolder)convertView.getTag();
         if(childViewHolder.type == FileModel.FILE_TRANSFERING){
             childViewHolder.fileNameTextView.setText(fileData.getFileName());
-            childViewHolder.fileRateTextView.setText(fileData.getRate());
-            childViewHolder.fileCurrentSizeTextView.setText(FileUtil.getAppropriateSize(fileData.getCurSize()));
-            childViewHolder.fileStateTextView.setText(fileData.getTransDirection()==FileModel.FILE_SEND?context.getString(R.string.file_sending):context.getString(R.string.file_receiving));
+            childViewHolder.fileRateTextView.setText(FileUtil.getAppropriateSize(fileData.getRate())+"/s");
+            childViewHolder.fileCurrentSizeTextView.setText(FileUtil.getAppropriateSize(fileData.getCurSize())+"/"+FileUtil.getAppropriateSize(fileData.getTotalSize()));
             childViewHolder.progressBar.setMax((int)fileData.getTotalSize());
             childViewHolder.progressBar.setProgress((int)fileData.getCurSize());
+            String state = null;
+            switch (fileData.getState()){
+                case FileModel.FILE_START:
+                    state = context.getString(R.string.file_start)+" ";
+                    state += direction;
+                    break;
+                case FileModel.FILE_STOP:
+                    state = context.getString(R.string.file_success)+" ";
+                    state +=direction;
+                    break;
+                case FileModel.FILE_VERIFYING:
+                    state = context.getString(R.string.file_verify);
+                    break;
+                case FileModel.FILE_TRANSFERING:
+                    state = context.getString(R.string.file_transfer);
+                    break;
+            }
+            childViewHolder.fileStateTextView.setText(state);
+
         }else{
             childViewHolder.fileNameTextView.setText(fileData.getFileName());
             childViewHolder.fileDateTextView.setText(fileData.getDate());
             childViewHolder.fileTotalSizeTextView.setText(FileUtil.getAppropriateSize(fileData.getTotalSize()));
             String state = null;
             switch (fileData.getState()){
+                case FileModel.FILE_CANCEL:
+                    state = context.getString(R.string.file_cancel);
+                    break;
                 case FileModel.FILE_SUCCESS:
                     state = context.getString(R.string.file_success);
                     break;
                 case FileModel.FILE_FAIL:
                     state = context.getString(R.string.file_fail);
-                    break;
-                case FileModel.FILE_PAUSE:
-                    state = context.getString(R.string.file_pause);
                     break;
             }
             childViewHolder.fileStateTextView.setText(state);

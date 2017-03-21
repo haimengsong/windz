@@ -54,7 +54,6 @@ public abstract class BaseActivity extends AppCompatActivity{
     class MyBroadcastReceiver extends BroadcastReceiver{
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d(TAG,"received");
             onReceiveIntent(context,intent);
         }
     }
