@@ -112,12 +112,14 @@ public class MainActivity extends BaseWebActivity implements View.OnClickListene
         String ip = bundle.getString("ip");
     }
 
-
     @Override
     public void onClick(View v) {
         int viewId = v.getId();
+        Intent intent = null;
         switch (viewId){
             case R.id.ib_record:
+                intent = new Intent(this,RecordsActivity.class);
+                startActivity(intent);
                 break;
             case R.id.ib_search:
                 boolean isSearching = mRadarView.isSearch();
@@ -138,7 +140,7 @@ public class MainActivity extends BaseWebActivity implements View.OnClickListene
                 }
                 break;
             case R.id.ib_friends:
-                Intent intent = new Intent(this,FriendsActivity.class);
+                intent = new Intent(this,FriendsActivity.class);
                 startActivity(intent);
                 break;
         }

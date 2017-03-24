@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class UserModel extends BaseUser{
 
-    private Map<String,RecordModel> mRecordList;
+    private List<RecordModel> mRecordList;
     private Map<String,PeerModel> mPeerList;
 
     public UserModel(){
@@ -24,7 +24,7 @@ public class UserModel extends BaseUser{
     }
     public UserModel(String name,String mac, String ip ){
         super(name,mac,ip);
-        mRecordList = new HashMap<>();
+        mRecordList = new ArrayList<>();
         mPeerList = new HashMap<>();
     }
 
@@ -41,7 +41,7 @@ public class UserModel extends BaseUser{
     }
 
     public void addRecord(RecordModel recordModel){
-        mRecordList.put(recordModel.getFilePath(),recordModel);
+        mRecordList.add(recordModel);
     }
 
     public void removeRecord(RecordModel recordModel){
@@ -62,4 +62,10 @@ public class UserModel extends BaseUser{
         }
         return friendList;
     }
+
+    public List<RecordModel> getRecordList(){
+        return mRecordList;
+    }
+
+
 }

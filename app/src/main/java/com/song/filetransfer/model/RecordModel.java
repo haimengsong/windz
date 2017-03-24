@@ -5,31 +5,18 @@ import java.io.File;
 
 public class RecordModel {
 
-    public final static int FILE_SEND = 0x0006;
 
-    public final static int FILE_RECEIVE = 0x0007;
+    private String filePath = null;
+    private long totalSize = 0;
+    private int transDirection = 0;
+    private String friendName = null;
 
-    private String filePath = "";
-    private int totalSize = 0;
-    private int transDirection = FILE_SEND;
-    private String friendName = "";
+    public RecordModel(String friendName, FileModel fileModel){
 
-    public RecordModel(){}
-    public RecordModel(String filePath){this.filePath=filePath;}
-    public RecordModel(String filePath, int totalSize){
-        this.filePath = filePath;
-        this.totalSize = totalSize;
-    }
-    public RecordModel(String filePath, int totalSize, int transDirection){
-        this.filePath = filePath;
-        this.totalSize = totalSize;
-        this.transDirection = transDirection;
-    }
-    public RecordModel(String filePath, int totalSize, int transDirection, String friendName){
-        this.filePath = filePath;
-        this.totalSize = totalSize;
-        this.transDirection = transDirection;
         this.friendName = friendName;
+        filePath = fileModel.getFilePath();
+        totalSize = fileModel.getTotalSize();
+        transDirection = fileModel.getTransDirection();
     }
 
 
@@ -44,11 +31,12 @@ public class RecordModel {
     public String getFileName(){
         return new File(filePath).getName();
     }
-    public int getTotalSize() {
+
+    public long getTotalSize() {
         return totalSize;
     }
 
-    public void setTotalSize(int totalSize) {
+    public void setTotalSize(long totalSize) {
         this.totalSize = totalSize;
     }
 

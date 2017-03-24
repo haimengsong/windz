@@ -38,35 +38,34 @@ public class FileUtil {
         Uri uri = Uri.fromFile(new File(filePath));
         if(!file.exists()) return null;
         String fileType = getFileType(file);
-        if(fileType.equals(VIDEODATATYPE))
-            return getBaseIntent(filePath).setDataAndType(uri,VIDEODATATYPE);
-        else if(fileType.equals(AUDIODATATYPE))
-            return getBaseIntent(filePath).setDataAndType(uri,AUDIODATATYPE);
-        else if(fileType.equals(IMAGEDATATYPE))
-            return getBaseIntent(filePath).setDataAndType(uri,IMAGEDATATYPE);
-        else if(fileType.equals(PACKAGEDATATYPE))
-            return getBaseIntent(filePath).setDataAndType(uri,PACKAGEDATATYPE);
-        else if(fileType.equals(PPTDATATYPE))
-            return getBaseIntent(filePath).setDataAndType(uri,PPTDATATYPE);
-        else if(fileType.equals(EXCELDATATYPE))
-            return getBaseIntent(filePath).setDataAndType(uri,EXCELDATATYPE);
-        else if(fileType.equals(WORDDATATYPE))
-            return getBaseIntent(filePath).setDataAndType(uri,WORDDATATYPE);
-        else if(fileType.equals(PDFDATATYPE))
-            return getBaseIntent(filePath).setDataAndType(uri,PDFDATATYPE);
-        else if(fileType.equals(CHMDATATYPE))
-            return getBaseIntent(filePath).setDataAndType(uri,CHMDATATYPE);
-        else if(fileType.equals(EXCELDATATYPE))
-            return getBaseIntent(filePath).setDataAndType(uri,EXCELDATATYPE);
-        else return getBaseIntent(filePath).setDataAndType(uri,OTHERDATATYPE);
-    }
 
-    public static Intent getBaseIntent(String filePath){
-        Intent intent = new Intent();
+        Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setAction(Intent.ACTION_VIEW);
+
+        if(fileType.equals(VIDEODATATYPE))
+            intent.setDataAndType(uri,VIDEODATATYPE);
+        else if(fileType.equals(AUDIODATATYPE))
+            intent.setDataAndType(uri,AUDIODATATYPE);
+        else if(fileType.equals(IMAGEDATATYPE))
+            intent.setDataAndType(uri,IMAGEDATATYPE);
+        else if(fileType.equals(PACKAGEDATATYPE))
+            intent.setDataAndType(uri,PACKAGEDATATYPE);
+        else if(fileType.equals(PPTDATATYPE))
+            intent.setDataAndType(uri,PPTDATATYPE);
+        else if(fileType.equals(EXCELDATATYPE))
+            intent.setDataAndType(uri,EXCELDATATYPE);
+        else if(fileType.equals(WORDDATATYPE))
+            intent.setDataAndType(uri,WORDDATATYPE);
+        else if(fileType.equals(PDFDATATYPE))
+            intent.setDataAndType(uri,PDFDATATYPE);
+        else if(fileType.equals(CHMDATATYPE))
+            intent.setDataAndType(uri,CHMDATATYPE);
+        else if(fileType.equals(EXCELDATATYPE))
+            intent.setDataAndType(uri,EXCELDATATYPE);
+        else intent.setDataAndType(uri,OTHERDATATYPE);
         return intent;
     }
+
     public static String getFileExtension(File file){
         // get the extension of this file
         String fileName = file.getName();

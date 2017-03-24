@@ -25,7 +25,7 @@ public class FileModel{
     private File file = null;
     private String filePath = null;
     private int state = FILE_START;
-    private long totalSize  = file.length();
+    private long totalSize  = 0;
     private long curSize = 0;
     private long rate = 0;
     private int transDirection = 0;
@@ -36,6 +36,7 @@ public class FileModel{
         this.filePath = filePath;
         this.file = new File(filePath);
         this.transDirection = transDirection;
+        this.totalSize = file.length();
     }
 
     public int getState() {

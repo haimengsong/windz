@@ -18,6 +18,7 @@ import com.song.filetransfer.helper.UdpHelper;
 import com.song.filetransfer.model.Constants;
 import com.song.filetransfer.model.FileModel;
 import com.song.filetransfer.model.PeerModel;
+import com.song.filetransfer.model.RecordModel;
 import com.song.filetransfer.model.UserModel;
 import com.song.filetransfer.utilities.NetUtil;
 
@@ -45,8 +46,13 @@ public class WebService extends Service {
     //for tcp helper
     public final static int RECEIVE_FILE = 0x00000005;
 
-    public final static int FILE_STATE_CHANGE = 0x00000006;
+    public final static int FILE_VERIFYING = 0x00000006;
 
+    public final static int FILE_SUCCESS = 0x00000007;
+
+    public final static int FILE_FAIL = 0x00000008;
+
+    public final static int FILE_TRANSFERING = 0x00000009;
 
     private TcpHelper tcphelper;
 
@@ -152,8 +158,18 @@ public class WebService extends Service {
                 intent = new Intent(Constants.ACTION_DISPLAY_FILE_LIST_CHANGE);
                 sendBroadCast(intent);
                 break;
-            case FILE_STATE_CHANGE:
-                intent = new Intent(Constants.ACTION_DISPLAY_FILE_LIST_CHANGE);
+            case FILE_FAIL:
+            case FILE_VERIFYING:
+                intent = new Intent(Constants.ACTION_DISPLAY_FILE_STATE_CHANGE);
+                sendBroadCast(intent);
+                break;
+            case FILE_SUCCESS:
+                intent = new Intent(Constants.ACTION_DISPLAY_FILE_STATE_CHANGE);
+                sendBroadCast(intent);
+                Log.d(TAG,"file sucess ip: "+ ip);
+                Log.d(TAG,userModel.getPeer(ip)==null?"null":"object");
+                userModel.addRecord(new RecordModel(userModel.getPeer(ip).getName(),fileModel));
+                intent = new Intent(Constants.ACTION_DISPLAY_RECORD_LIST_CHANGE);
                 sendBroadCast(intent);
                 break;
         }

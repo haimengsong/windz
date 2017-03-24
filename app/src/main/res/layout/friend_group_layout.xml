@@ -5,6 +5,7 @@
     android:background="@drawable/friend_group_selector"
     android:padding="5dp"
     android:id = "@+id/group"
+    android:focusable="false"
     >
     <RelativeLayout
         android:id="@+id/friend_img"
@@ -32,6 +33,7 @@
         android:textSize="20sp"
         android:textStyle="bold"
         />
+
     <TextView
         android:id="@+id/friend_ip"
         android:layout_width="wrap_content"

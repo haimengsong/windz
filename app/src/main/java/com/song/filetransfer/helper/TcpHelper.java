@@ -115,7 +115,7 @@ public class TcpHelper {
                                         BufferedOutputStream bos = null;
                                         BufferedInputStream bis = null;
                                         fileModel.setState(FileModel.FILE_TRANSFERING);
-                                        mService.handleMsgFromTCP(WebService.FILE_STATE_CHANGE,null,null);
+                                        mService.handleMsgFromTCP(WebService.FILE_TRANSFERING,null,null);
                                         try {
 
                                             bos= new BufferedOutputStream(new FileOutputStream(fileModel.getFile()));
@@ -129,7 +129,7 @@ public class TcpHelper {
                                                 public void run() {
                                                     long curSize = fileModel.getCurSize();
                                                     fileModel.setRate((long)((curSize-preSize)/0.1));
-                                                    mService.handleMsgFromTCP(WebService.FILE_STATE_CHANGE,null,null);
+                                                    mService.handleMsgFromTCP(WebService.FILE_TRANSFERING,null,null);
                                                 }
                                             },100,100);
 
@@ -142,20 +142,20 @@ public class TcpHelper {
                                             Log.i(TAG,"succeed to receive file: "+ fileModel.getFilePath());
                                             Log.i(TAG,"start verifying");
                                             fileModel.setState(FileModel.FILE_VERIFYING);
-                                            mService.handleMsgFromTCP(WebService.FILE_STATE_CHANGE,null,null);
+                                            mService.handleMsgFromTCP(WebService.FILE_VERIFYING,null,null);
                                             if(fileModel.verify()){
                                                 fileModel.setState(FileModel.FILE_SUCCESS);
-                                                mService.handleMsgFromTCP(WebService.FILE_STATE_CHANGE,null,null);
+                                                mService.handleMsgFromTCP(WebService.FILE_SUCCESS,mSocket.getInetAddress().getHostAddress(),fileModel);
                                             }else{
                                                 fileModel.setState(FileModel.FILE_FAIL);
-                                                mService.handleMsgFromTCP(WebService.FILE_STATE_CHANGE,null,null);
+                                                mService.handleMsgFromTCP(WebService.FILE_FAIL,null,null);
                                             }
 
                                         } catch (FileNotFoundException e) {
                                             e.printStackTrace();
                                         } catch (IOException e){
                                             fileModel.setState(FileModel.FILE_FAIL);
-                                            mService.handleMsgFromTCP(WebService.FILE_STATE_CHANGE,null,null);
+                                            mService.handleMsgFromTCP(WebService.FILE_FAIL,null,null);
                                             e.printStackTrace();
                                         } finally {
                                             if(bos!=null) {
@@ -258,7 +258,7 @@ public class TcpHelper {
                         }
                     }
                     fileModel.setState(FileModel.FILE_TRANSFERING);
-                    mService.handleMsgFromTCP(WebService.FILE_STATE_CHANGE,null,null);
+                    mService.handleMsgFromTCP(WebService.FILE_TRANSFERING,null,null);
                     ops = new BufferedOutputStream(socket.getOutputStream());
                     bis = new BufferedInputStream(new FileInputStream(file));
                     byte [] buffer = new byte[8192];
@@ -270,7 +270,7 @@ public class TcpHelper {
                         public void run() {
                             long curSize = fileModel.getCurSize();
                             fileModel.setRate((long)((curSize-preSize)/0.1));
-                            mService.handleMsgFromTCP(WebService.FILE_STATE_CHANGE,null,null);
+                            mService.handleMsgFromTCP(WebService.FILE_TRANSFERING,null,null);
                         }
                     },100,100);
                     while((count = bis.read(buffer))!=-1){
@@ -281,14 +281,14 @@ public class TcpHelper {
                     }
                     Log.i(TAG,"client: "+socket.getLocalAddress().getHostAddress()+" on port: "+socket.getLocalPort()+" succeed to send file: "+fileModel.getFilePath()+" to server!");
                     fileModel.setState(FileModel.FILE_SUCCESS);
-                    mService.handleMsgFromTCP(WebService.FILE_STATE_CHANGE,null,null);
+                    mService.handleMsgFromTCP(WebService.FILE_SUCCESS,ip,fileModel);
 
                 }catch (SocketException e){
                     e.printStackTrace();
                 }catch (IOException e){
                     e.printStackTrace();
                     fileModel.setState(FileModel.FILE_FAIL);
-                    mService.handleMsgFromTCP(WebService.FILE_STATE_CHANGE,null,null);
+                    mService.handleMsgFromTCP(WebService.FILE_FAIL,null,null);
                 }finally {
 
                     if(ops!=null) {

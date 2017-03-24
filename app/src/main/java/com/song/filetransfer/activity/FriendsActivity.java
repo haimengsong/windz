@@ -20,9 +20,12 @@ import com.song.filetransfer.R;
 import com.song.filetransfer.adapter.FriendExpandableListViewAdapter;
 import com.song.filetransfer.base.BaseWebActivity;
 import com.song.filetransfer.model.Constants;
+import com.song.filetransfer.model.FileModel;
 import com.song.filetransfer.model.PeerModel;
 import com.song.filetransfer.service.WebService;
+import com.song.filetransfer.utilities.FileUtil;
 
+import java.io.File;
 import java.util.List;
 
 public class FriendsActivity extends BaseWebActivity implements ExpandableListView.OnGroupClickListener, ExpandableListView.OnChildClickListener, FriendExpandableListViewAdapter.GroupButtonClickListener {
@@ -57,7 +60,7 @@ public class FriendsActivity extends BaseWebActivity implements ExpandableListVi
             mFriendExpandableListViewAdapter = new FriendExpandableListViewAdapter(this,mFriendListData);
             mFriendExpandableListViewAdapter.setOnGroupButtonClickListener(this);
             mExpandableListView.setAdapter(mFriendExpandableListViewAdapter);
-
+            mExpandableListView.setSelected(false);
         }
     }
 
@@ -91,11 +94,12 @@ public class FriendsActivity extends BaseWebActivity implements ExpandableListVi
     protected void addFiltersToIntentFilter(IntentFilter mIntentFilter) {
         mIntentFilter.addAction(Constants.ACTION_DISPLAY_CONNECTION_CHANGE);
         mIntentFilter.addAction(Constants.ACTION_DISPLAY_FILE_LIST_CHANGE);
+        mIntentFilter.addAction(Constants.ACTION_DISPLAY_FILE_STATE_CHANGE);
     }
 
     @Override
     protected void onReceiveIntent(Context context, Intent intent) {
-        
+
         String  action = intent.getAction();
         switch (action){
             case Constants.ACTION_DISPLAY_CONNECTION_CHANGE:
@@ -106,8 +110,11 @@ public class FriendsActivity extends BaseWebActivity implements ExpandableListVi
                 Log.i(TAG,"receive intent action: ACTION_DISPLAY_FILE_LIST_CHANGE");
                 updateScreen(false);
                 break;
+            case Constants.ACTION_DISPLAY_FILE_STATE_CHANGE:
+                Log.i(TAG,"receive intent action: ACTION_DISPLAY_FILE_STATE_CHANGE");
+                updateScreen(false);
+                break;
         }
-
 
     }
 
@@ -118,6 +125,12 @@ public class FriendsActivity extends BaseWebActivity implements ExpandableListVi
 
     @Override
     public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+        FileModel fileModel = mFriendListData.get(groupPosition).getFileById(childPosition);
+        if(fileModel.getState()== FileModel.FILE_SUCCESS){
+            Intent intent = FileUtil.getOpenFileIntent(fileModel.getFilePath());
+            startActivity(intent);
+            return true;
+        }
         return false;
     }
 

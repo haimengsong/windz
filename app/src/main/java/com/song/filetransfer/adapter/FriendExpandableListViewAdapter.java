@@ -116,7 +116,6 @@ public class FriendExpandableListViewAdapter extends BaseExpandableListAdapter  
         return true;
     }
 
-
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 
@@ -225,7 +224,6 @@ public class FriendExpandableListViewAdapter extends BaseExpandableListAdapter  
     private class ChildViewHolder{
         public int type;
         public TextView fileNameTextView;
-        public TextView fileSizeTextView;
         public TextView fileStateTextView;
         public TextView fileRateTextView;
         public TextView fileCurrentSizeTextView;

@@ -18,4 +18,5 @@
     <string name="friend_send">send</string>
     <string name="unknown_distance">unknown</string>
     <string name="file_verify">verifying</string>
+    <string name="no_record_indicator">No Record</string>
 </resources>
