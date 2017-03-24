@@ -15,28 +15,29 @@
         <activity android:name=".activity.MainActivity">
         </activity>
         <activity android:name=".activity.WelcomeActivity"
-            android:theme="@style/AppTheme.NoActionBar.FullScreen"
-            >
+            android:theme="@style/AppTheme.NoActionBar.FullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".activity.FileChooserActivity"
-            android:theme="@style/Theme.AppCompat.Light.DialogWhenLarge"
-            android:parentActivityName=".activity.MainActivity"
-            >
+            android:theme="@style/Theme.AppCompat.Light.DialogWhenLarge">
             <meta-data
                 android:name = "android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity" />
         </activity>
 
-        <activity android:name=".activity.FriendsActivity"
-            android:parentActivityName=".activity.MainActivity"
-            >
+        <activity android:name=".activity.FriendsActivity">
             <meta-data
                 android:name = "android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity" />
+        </activity>
+
+        <activity android:name=".activity.RecordsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.MainActivity"/>
         </activity>
         <service android:name=".service.WebService">
         </service>
