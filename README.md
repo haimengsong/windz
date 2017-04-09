@@ -1,15 +1,16 @@
-# Description
-Wind Transfer is an open-source Android application that allows Android devices in the local network to transfer any kind of files
-with much higher transfer speed and sort of data security after they succeed to establish connections.
+# FileTransfer
+FileTransfer is an Android application that allows Android mobile devices in the local network to share any kind of files
+with much higher transfer speed and data security once they establish connections.
 
 # Features
 1. Radar Search Screen
-   * search available online devices, request for connections, and then establish connections successfully 
+   * Search available online devices, request for connections, and then establish connections 
 2. Device Management
-   * managing current connected devices with operations like cutting off connections, transferring files 
+   * Manage current connected devices using operations like cutting off connections, sending files 
 3. File Transfer
-   * tranfering multiple and large files of any kind with multiple devices simultinanously
-   * supporting functionality of pausing, resuming and canceling
+   * Send and receive multiple and large files of any kind with multiple devices simultinanously
+   * Support functionality of pausing, resuming and canceling files
 4. File Management
+   * Check files that have been transferred successfully in detail 
 5. Security Mechanism
-   * Encrypting and Decrypting data files using AES and RSA algorithms
+   * Encrypte and Decrypte data using AES and RSA algorithms
