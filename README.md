@@ -1,6 +1,6 @@
 # FileTransfer
-FileTransfer is an Android application that allows Android mobile devices in the local network to share any kind of files
-with much higher transfer speed and data security once they establish connections.
+FileTransfer is an mobile application that allows Android mobile devices in the local network to share any kind of files
+with much higher transfer speed and data security.
 
 # Features
 1. Radar Search Screen
@@ -11,6 +11,6 @@ with much higher transfer speed and data security once they establish connection
    * Send and receive multiple and large files of any kind with multiple devices simultinanously
    * Support functionality of pausing, resuming and canceling files
 4. File Management
-   * Check files that have been transferred successfully in detail 
+   * Check out files in detail that have been transferred successfully
 5. Security Mechanism
-   * Encrypte and Decrypte data using AES and RSA algorithms
+   * Encrypte and Decrypte data using AES and RSA algorithms as well as MD5
