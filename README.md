@@ -4,13 +4,20 @@ with much higher transfer speed and data security.
 
 # Features
 1. Radar Search Screen
-   * Search available online devices, request for connections, and then establish connections 
+   * Search and display available online devices
+   * Request for connection
+   * Accept/Ignore requests 
 2. Device Management
-   * Manage current connected devices using operations like cutting off connections, sending files 
+   * Display connected devices
+   * Choose a device to send files
+   * Disconnect a device
 3. File Transfer
-   * Send and receive multiple and large files of any kind with multiple devices simultinanously
-   * Support functionality of pausing, resuming and canceling files
+   * Explore file system
+   * Display the real-time progress of sending or receiving files
+   * Pause, resume or cancel the file transfer process
 4. File Management
-   * Check out files in detail that have been transferred successfully
+   * Display information about files in detail
+   * Delete files
 5. Security Mechanism
-   * Encrypte and Decrypte data using AES and RSA algorithms as well as MD5
+   * Ensure that the data is not stolen and fabricated
+   * Ensure that the data is not altered
