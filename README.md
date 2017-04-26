@@ -12,8 +12,8 @@ with much higher transfer speed and data security.
    * Choose a device to send files
    * Disconnect a device
 3. File Transfer
-   * Explore file system
-   * Display the real-time progress of sending or receiving files
+   * Explore the File System 
+   * Display the real-time progress of sending or receiving files
    * Pause, resume or cancel the file transfer process
 4. File Management
    * Display information about files in detail
