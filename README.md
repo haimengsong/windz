@@ -1,5 +1,5 @@
-# FileTransfer
-FileTransfer is an mobile application that allows Android mobile devices in the local network to share any kind of files
+# WindTransfer
+WindTransfer is an mobile application that allows Android mobile devices in the local network to share any kind of files
 with much higher transfer speed and data security.
 
 # Features
