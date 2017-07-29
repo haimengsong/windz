@@ -1,6 +1,6 @@
 # Windz
-Windz is an mobile application that allows Android mobile devices in the local network to share any kind of files
-with much higher transfer speed and data security.
+Windz is an mobile application that allows Android mobile devices in the local network to share files of any kinds
+with high transfer speed and with data security.
 
 # Features
 1. Radar Search Screen
